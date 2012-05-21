@@ -1,0 +1,14 @@
+.TEST
+
+
+ClrDraw
+20->X->Y
+
+Repeat getKey(15)
+    X - getKey(2) + getKey(3) -> X
+    Y - getKey(4) + getKey(1) -> Y
+    Rect(X,Y,5,5)
+    DispGraph
+    RectI(X,Y,5,5)
+End
+

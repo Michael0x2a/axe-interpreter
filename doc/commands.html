@@ -1,0 +1,1859 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset='UTF-8' />
+		<title>Axe Parser Command List</title>
+		<style type='text/css' media='all'>
+			body {
+				font-family: Verdana, Sans-serif;
+				font-size: 0.8em;
+				margin: 0.4cm 2cm
+			}
+
+			header {
+				background-color: #EEEEEE;
+				border-radius: 0.2cm;
+				font-variant: small-caps;
+				margin-bottom: 0.5cm;
+				padding: 0.3em;
+				text-align: center
+			}
+
+			h1 {
+				font-size: 3em;
+				margin: 0.1em
+			}
+
+			header h2 {
+				font-size: 2em;
+				margin: 0.1em
+			}
+
+			menu ul {
+				list-style: none;
+				margin: 0;
+				padding: 0
+			}
+
+			menu ul {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+				text-align: center
+			}
+
+			menu ul li {
+				display: inline-block;
+				margin: 0.1cm
+			}
+
+			menu a {
+				background-color: #F4F4F4;
+				border-radius: 6px;
+				color: #333333;
+				display: inline-block;
+				font-size: 1.2em;
+				font-weight: bold;
+				padding: 0.1em 1em;
+				text-decoration: none;
+				transition: color 200ms linear, background-color 300ms linear;
+				-o-transition: color 200ms linear, background-color 300ms linear;
+				-moz-transition: color 200ms linear, background-color 300ms linear;
+				-ms-transition: color 200ms linear, background-color 300ms linear;
+				-webkit-transition: color 200ms linear, background-color 300ms linear;
+			}
+
+			menu a:hover {
+				background-color: #333333;
+				color: #F4F4F4
+			}
+
+			table {
+				border-width: 0px;
+				border-collapse: collapse;
+				background-color: transparent;
+				margin-bottom: 1cm;
+				width: 100%
+			}
+
+			caption {
+				background-color: #AAAAAA;
+				border: 2px solid #AAAAAA;
+				color: white;
+				font-size: 1.4em;
+				font-weight: bold;
+				margin: 0;
+				padding: 2px 6px;
+				text-align: center
+			}
+
+			th {
+				background-color: #F2F2F2;
+				border: 1px solid #DDDDDD;
+			}
+
+			tr:nth-child(even) {
+				background-color: #FAFAFA
+			}
+
+			td {
+				border: 1px solid #DDDDDD;
+				padding: 2px 6px;
+				text-align: left
+			}
+
+			td:first-child {
+				width: 24%
+			}
+
+			code {
+				font-family: "Courier New", Consolas, Monospace;
+			}
+
+			.implemented{
+				background-color: rgba(34, 222, 24, 0.2);
+			}
+
+			.notImplemented{
+				background-color: rgba(255, 0, 0, 0.2);
+				opacity: 0.6
+			}
+            
+            .noOp{
+                background-color: rgba(50, 50, 50, 0.2);
+            }
+
+			.keyReplacement{
+				color: #108000;
+				display: inline-block;
+				float: right;
+				font-size: 0.6em;
+				font-style: italic;
+				text-align: right
+			}
+
+			span.keyReplacement:before{
+				content: "Key: ";
+				font-style: normal
+			}
+
+			footer h5 {
+				text-align: center
+				font-style: italic
+			}
+			.DATA, .FILE, .LBL, .NAME, .VAR { color: #0039BF; }
+			.BIN, .CHAR, .DEC, .HEX, .INT, .STR, .TOKEN { color: #808080 }
+			.BMP, .BUF, .BYTE, .COND, .DX, .DY, .EXP, .FREQ, .H, .KEY, .MAX, .MODE, .N, .PIC, .PTR, .R, .SIZE, .STR1, .STR2, .TEMP, .TIME, .W, .WAVE, .X, .Y { color: #ED0000 }
+			.CONST { color: #ED6F00 }
+			.CODE { color: #108000 }
+			.LOW, .MED, .HIGH { font-weight: bold }
+			.LOW { color: #10BF00 }
+			.MED { color: #E8B200 }
+			.HIGH { color: #E85D00 }
+		</style>
+		<style type='text/css' media='print'>
+			body {
+				margin: 0;
+				font-size: 0.7em;
+			}
+
+			table caption {
+				background-color: white;
+				color: black;
+			}
+
+			menu { display: none }
+		</style>
+	</head>
+	<body>
+		<header>
+			<h1>Axe Parser v1.1.2</h1>
+			<h2>Command List</h2>
+		</header>
+
+		<menu id=commandListIndex>
+			<ul>
+				<li><a href="#systemCommands">System</a></li>
+				<li><a href="#screenAndBufferCommands">Screen and Buffer</a></li>
+				<li><a href="#controlBlocksCommands">Control Blocks</a></li>
+				<li><a href="#labelsAndSubroutinesCommands">Labels and Subroutines</a></li>
+				<li><a href="#basicMathCommands">Basic Math</a></li>
+				<li><a href="#advancedMathCommands">Advanced Math</a></li>
+				<li><a href="#drawingCommands">Drawing</a></li>
+				<li><a href="#spritesCommands">Sprites</a></li>
+				<li><a href="#textCommands">Text</a></li>
+				<li><a href="#dataAndStorageCommands">Data and Storage</a></li>
+				<li><a href="#externalVariablesCommands">External Variables</a></li>
+				<li><a href="#interruptsCommands">Interrupts</a></li>
+				<li><a href="#linkPortCommands">Link Port</a></li>
+				<li><a href="#miscellaneousCommands">Miscellaneous</a></li>
+			</ul>
+		</menu>
+
+		<table id=systemCommands class=commandTable>
+
+			<caption>System</caption>
+
+			<thead>
+				<tr>
+					<th>Command</th>
+					<th>Description</th>
+                    <th>Implemented?</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr>
+					<td><code>_</code></td>
+					<td>Spaces are ignored in most situations. They mainly just help for code organization and readability.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td><code>:</code></td>
+					<td>The colon separates 2 statements in the same expression. Enter ends the expression, closing all unclosed parenthesis.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td><code>.</code></td>
+					<td>The period is a single line comment. Whatever follows will be ignored until the next newline.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>...</code></td>
+					<td>Start or end of a multi-line comment ignoring everything in between. Must be the first characters on the line.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>...If <span class=CONST>CONST</span></code></td>
+					<td>A conditional comment. Only starts a multi-line comment if the constant is zero.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+				<tr>
+					<td><code>...!If <span class=CONST>CONST</span></code></td>
+					<td>A conditional comment. Only starts a multi-line comment if the constant is non-zero.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+				<tr>
+					<td><code>...Else</code></td>
+					<td>If the previous conditional was a comment, the next comment block will not be a comment and vise-versa.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+				<tr>
+					<td><code>DiagnosticOn</code></td>
+					<td>Turns on the run indicator (marching ants). Program will display "done" after finishing.</td>
+                    <td class=noOp>Legal syntax, but does nothing.</td>
+				</tr>
+				<tr>
+					<td><code>DiagnosticOff</code></td>
+					<td>Turns off the run indicator. Program will not display "done" after finishing.</td>
+                    <td class=noOp>Legal syntax, but does nothing.</td>
+				</tr>
+				<tr>
+					<td><code>Full</code></td>
+					<td>Full speed mode is activated if supported, making it 2.5 times faster on newer calculators. Returns 0 if not supported.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+				<tr>
+					<td><code>Normal</code></td>
+					<td>Full speed mode is deactivated.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+				<tr>
+					<td><code>Pause <span class=EXP>EXP</span></code></td>
+					<td>Pause for the given amount of time. A one second pause is a value of roughly 1800 at normal speed or 4500 in full speed mode.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+				<tr>
+					<td><code>getKey</code></td>
+					<td>Returns the last key pressed or zero if no keys were pressed. Its just like the BASIC getkey, but with different codes.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+				<tr>
+					<td><code>getKey<sup>r</sup></code></td>
+					<td>Pauses until a key or key combination is pressed and returns the key code. These are different codes than the normal getkeys.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+				<tr>
+					<td><code>getKey(<span class=KEY>KEY</span>)</code></td>
+					<td>Returns 1 if the key is held down this instant and 0 otherwise.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+				<tr>
+					<td><code>getKey(0)</code></td>
+					<td>Returns a non-zero number if any key is held down and 0 otherwise.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+				<tr>
+					<td><code>Asm(<span class=HEX>HEX</span>)</code></td>
+					<td>Native assembly code written in hexadecimal is inserted at the current position.</td>
+                    <td class=notImplemented>Never</td>
+				</tr>
+				<tr>
+					<td><code>prgm<span class=NAME>NAME</span></code></td>
+					<td>The code from the external program is parsed as if it completely replaced this command in the main program. (Similar to the C++ "include")</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+				<tr>
+					<td>
+						<code>#Axiom(<span class=NAME>NAME</span>)</code>
+						<span class=keyReplacement>AsmComp()</span>
+					</td>
+					<td>The Axiom assembly library becomes useable in the program. No quotes needed, just type the name of the appvar case sensitive.</td>
+                    <td class=notImplemented>No -- may never be implemented</td>
+				</tr>
+				<tr>
+					<td>
+						<code>#Icon(<span class=HEX>HEX</span>)</code>
+						<span class=keyReplacement>identity()</span>
+					</td>
+					<td>Tells the parser to replace the default icon with the new icon. The icon must be 64 hex characters long.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+				<tr>
+					<td>
+						<code>#Realloc(<span class=CONST>PTR</span>)</code>
+						<span class=keyReplacement>Real()</span>
+					</td>
+					<td>Moves the variable buffer to another location in ram. If the field is left blank, the default location is restored.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<table id=screenAndBufferCommands class=commandTable>
+
+			<caption>Screen and Buffer</caption>
+
+			<thead>
+				<tr>
+					<th>Command</th>
+					<th>Description</th>
+                    <th>Implemented?</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr>
+					<td>
+						<code>DispGraph</code><br />
+						<code>DispGraph(<span class=BUF>BUF</span>)</code>
+					</td>
+					<td>Draws the main buffer, or specified buffer, to the screen.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>DispGraphClrDraw</code><br />
+						<code>DispGraphClrDraw(<span class=BUF>BUF</span>)</code>
+					</td>
+					<td>Same as <code>DispGraph:ClrDraw</code> but much faster than doing them individually.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>DispGraph<sup>r</sup></code><br />
+						<code>DispGraph(<span class=BUF>BUF1</span>,<span class=BUF>BUF2</span>)<sup>r</sup></code>
+					</td>
+					<td>Draws the main and back buffer, or specified buffers, to the screen to create 3 color grayscale.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>DispGraphClrDraw<sup>r</sup></code><br />
+						<code>DispGraphClrDraw(<span class=BUF>BUF1</span>,<span class=BUF>BUF2</span>)<sup>r</sup></code>
+					</td>
+					<td>Same as <code>DispGraph<sup>r</sup>:ClrDraw<sup>rr</sup></code> but much faster than doing them individually.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>DispGraph<sup>rr</sup></code><br />
+						<code>DispGraph(<span class=BUF>BUF1</span>,<span class=BUF>BUF2</span>)<sup>r</sup></code>
+					</td>
+					<td>Draws the main and back buffer, or specified buffers, to the screen to create 4 color grayscale.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>DispGraphClrDraw<sup>rr</sup></code><br />
+						<code>DispGraphClrDraw(<span class=BUF>BUF1</span>,<span class=BUF>BUF2</span>)<sup>r</sup></code>
+					</td>
+					<td>Same as <code>DispGraph<sup>rr</sup>:ClrDraw<sup>rr</sup></code> but much faster than doing them individually.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>ClrHome</code></td>
+					<td>Erases the screen and text shadow and moves the cursor to the upper left corner.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>ClrDraw</code><br />
+						<code>ClrDraw<sup>r</sup></code><br />
+						<code>ClrDraw(<span class=BUF>BUF</span>)</code>
+					</td>
+					<td>Erases the main buffer, back buffer, or specified buffer to white pixels.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td><code>ClrDraw<sup>rr</sup></code></td>
+					<td>Erases both the front and back buffers.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>DrawInv</code><br />
+						<code>DrawInv <sup>r</sup></code><br />
+						<code>DrawInv (<span class=BUF>BUF</span>)</code>
+					</td>
+					<td>The colors on the main buffer, back buffer, or specified buffer are inverted.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>StoreGDB</code></td>
+					<td>Takes a screenshot and saves it to the main buffer.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>StorePic</code></td>
+					<td>Copies the main buffer to the back buffer.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>RecallPic</code></td>
+					<td>Copies the back buffer to the main buffer.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>Horizontal +</code><br />
+						<code>Horizontal +<sup>r</sup></code><br />
+						<code>Horizontal +(<span class=BUF>BUF</span>)</code>
+					</td>
+					<td>The main buffer, back buffer, or specified buffer is shifted right by 1 pixel. White pixels are shifted in.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>Horizontal -</code><br />
+						<code>Horizontal -<sup>r</sup></code><br />
+						<code>Horizontal -(<span class=BUF>BUF</span>)</code>
+					</td>
+					<td>The main buffer, back buffer, or specified buffer is shifted left by 1 pixel. White pixels are shifted in.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>Vertical +</code><br />
+						<code>Vertical +<sup>r</sup></code><br />
+						<code>Vertical +(<span class=BUF>BUF</span>)</code>
+					</td>
+					<td>The main buffer, back buffer, or specified buffer is shifted down by 1 pixel. New pixels are not shifted in, that row remains the same.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>Vertical -</code><br />
+						<code>Vertical -<sup>r</sup></code><br />
+						<code>Vertical -(<span class=BUF>BUF</span>)</code>
+					</td>
+					<td>The main buffer, back buffer, or specified buffer is shifted up by 1 pixel. New pixels are not shifted in, that row remains the same.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>Shade()</code></td>
+					<td>Returns the contrast value of the operating system before the program started.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>Shade(<span class=EXP>EXP</span>)</code></td>
+					<td>Sets the contrast. 0 is lightest, 63 is darkest.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<table id=controlBlocksCommands class=commandTable>
+
+			<caption>Control Blocks</caption>
+
+			<thead>
+				<tr>
+					<th>Command</th>
+					<th>Description</th>
+                    <th>Implemented?</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr>
+					<td><code>If <span class=EXP>EXP</span>:<span class=CODE>code1</span>:End</code></td>
+					<td>If <span class=EXP>EXP</span> is true, <span class=CODE>code1</span> will be executed.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td><code>If <span class=EXP>EXP</span>:<span class=CODE>code1</span>:Else:<span class=CODE>code2</span>:End</code></td>
+					<td>If <span class=EXP>EXP</span> is true, then only <span class=CODE>code1</span> is executed. Otherwise, only <span class=CODE>code2</span> is executed.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td><code>ElseIf <span class=EXP>EXP</span></code></td>
+					<td>Can be used inside <code>If</code> blocks. If <span class=EXP>EXP</span> is true, the block's code is executed and then skips to the end of the block.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>!If <span class=EXP>EXP</span>:<span class=CODE>code1</span>:End</code></td>
+					<td>If <span class=EXP>EXP</span> is false, <span class=CODE>code1</span> will be executed.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>!If <span class=EXP>EXP</span>:<span class=CODE>code1</span>:Else:<span class=CODE>code2</span>:End</code></td>
+					<td>If <span class=EXP>EXP</span> is false, then only <span class=CODE>code1</span> is executed. Otherwise, only <span class=CODE>code2</span> is executed.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>Else!If <span class=EXP>EXP</span></code></td>
+					<td>Can be used inside <code>If</code> blocks. If <span class=EXP>EXP</span> is false, the block's code is executed and then skips to the end of the block.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>While <span class=EXP>EXP</span>:<span class=CODE>code1</span>:End</code></td>
+					<td>The expression is checked first. If its true, <span class=CODE>code1</span> will be executed over and over until its false.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td><code>Repeat <span class=EXP>EXP</span>:<span class=CODE>code1</span>:End</code></td>
+					<td>The expression is checked first. If its false, <span class=CODE>code1</span> will be executed over and over until its true.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td><code>For(<span class=EXP>EXP</span>):<span class=CODE>code1</span>:End</code></td>
+					<td>Executes <span class=CODE>code1</span> exactly <span class=EXP>EXP</span> times. <code>Goto</code> cannot be used inside this structure.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td><code>For(<span class=VAR>VAR</span>,<span class=EXP>EXP1</span>,<span class=EXP>EXP2</span>):<span class=CODE>code1</span>:End</code></td>
+					<td>The variable <span class=VAR>VAR</span> is initialized with <span class=EXP>EXP1</span>. If its greater than <span class=EXP>EXP2</span>, the loop ends.  Otherwise <span class=CODE>code1</span> is executed and <span class=VAR>VAR</span> is incremented by 1.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td><code>DS&lt;(<span class=VAR>VAR</span>,<span class=MAX>MAX</span>):<span class=CODE>code1</span>:End</code></td>
+					<td>The variable <span class=VAR>VAR</span> is decreased by 1. If its 0, <span class=CODE>code1</span> is executed and the variable resets back to <span class=MAX>MAX</span>. Otherwise the code is skipped.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+				<tr>
+					<td><code>EndIf <span class=EXP>EXP</span></code></td>
+					<td>In loops, it will exit the loop if <span class=EXP>EXP</span> is true. But it works just like a regular <code>End</code> otherwise.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+				<tr>
+					<td><code>End!If <span class=EXP>EXP</span></code></td>
+					<td>In loops, it will exit the loop if <span class=EXP>EXP</span> is false. But it works just like a regular <code>End</code> otherwise.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<table id=labelsAndSubroutinesCommands class=commandTable>
+			<caption>Labels and Subroutines</caption>
+
+			<thead>
+				<tr>
+					<th>Command</th>
+					<th>Description</th>
+                    <th>Implemented?</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr>
+					<td><code>Lbl <span class=LBL>LBL</span></code></td>
+					<td>Creates a label at the current position.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td><code>Goto <span class=LBL>LBL</span></code></td>
+					<td>Jumps to the label.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td><code>Goto (<span class=EXP>EXP</span>)</code></td>
+					<td>Jumps to a label defined by an expression.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>sub(<span class=LBL>LBL</span>,...)</code></td>
+					<td>Loads 0 to 6 arguments to the <span class=VAR>r<sub>1</sub></span> through <span class=LBL>r<sub>6</sub></span> variables respectively. Then the subroutine is called. Most subroutines should end with a Return.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>sub(<span class=LBL>LBL</span><sup>r</sup>,...)</code></td>
+					<td>Same as above except the argument variables it uses are saved before the subroutine is called and restored when it returns.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code><span class=LBL>LBL</span>(...)</code></td>
+					<td>Same as <code>sub(</code> but with a simpler-to-type format. Also takes 0 to 6 arguments.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>(<span class=EXP>EXP</span>)(...)</code></td>
+					<td>Same as above but with a subroutine defined by an expression.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>Return</code></td>
+					<td>Returns from a subroutine. If not in a subroutine, the program will end.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>Return<sup>r</sup></code></td>
+					<td>Emergency exits the program from within any number of nested calls.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>ReturnIf <span class=EXP>EXP</span></code></td>
+					<td>Returns only if <span class=EXP>EXP</span> is true.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>Return!If <span class=EXP>EXP</span></code></td>
+					<td>Returns only if <span class=EXP>EXP</span> is false.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code><sub>L</sub><span class=LBL>LBL</span></code></td>
+					<td>Returns the address of the label.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>&lambda;(<span class=EXP>EXP</span>)</code>
+						<span class=keyReplacement>log()</span>
+					</td>
+					<td>Creates a subroutine that computes an expression in terms of <span class=VAR>r<sub>1</sub></span> through <span class=VAR>r<sub>6</sub></span>. Returns the address of that subroutine.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>Z-Test(<span class=EXP>EXP</span>,<span class=LBL>LBL</span>,...)</code></td>
+					<td>Checks the expression. If its 0, it will jump to the first label, if its 1, it will jump to the second, etc. If out of range, it will skip the command.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<table id=basicMathCommands class=commandTable>
+
+			<caption>Basic Math</caption>
+
+			<thead>
+				<tr>
+					<th>Command</th>
+					<th>Description</th>
+                    <th>Implemented?</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr>
+					<td><code><span class=VAR>VAR</span></code></td>
+					<td>Returns the variable. Uppercase <span class=VAR>A</span> through <span class=VAR>Z</span>, <span class=VAR>&theta;</span>, and <span class=VAR>r<sub>1</sub></span> through <span class=VAR>r<sub>6</sub></span> are variables as well as custom named variables.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td><code><span class=VAR>VAR</span><sup>r</sup></code></td>
+					<td>Returns only the first 8 bits of the variable.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>&deg;<span class=VAR>VAR</span></code></td>
+					<td>Returns the address of the variable in memory.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td><code><span class=EXP>EXP</span>&rarr;<span class=VAR>VAR</span></code></td>
+					<td>Stores the expression into the variable.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td><code><span class=EXP>EXP</span>&rarr;<span class=VAR>VAR</span><sup>r</sup></code></td>
+					<td>Stores the expression into the first 8 bits of the variable.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>'<span class=CHAR>CHAR</span>'</code></td>
+					<td>The ASCII constant as an integer.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>-<span class=EXP>EXP</span></code>
+					<td>Returns the negative of the expression. That's a negative sign, not a minus sign!</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code><span class=EXP>EXP1</span>+<span class=EXP>EXP2</span></code><br />
+						<code><span class=EXP>EXP1</span>-<span class=EXP>EXP2</span></code>
+					</td>
+					<td><span class=EXP>EXP2</span> is added to or subtracted from <span class=EXP>EXP1</span>.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code><span class=EXP>EXP</span>++</code><br />
+						<code><span class=EXP>EXP</span>--</code>
+					</td>
+					<td>The variable or memory location is increased or decreased by 1. Memory locations need curly brackets.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code><span class=EXP>EXP1</span>*<span class=EXP>EXP2</span></code><br />
+						<code><span class=EXP>EXP1</span>/<span class=EXP>EXP2</span></code><br />
+						<code><span class=EXP>EXP1</span>^<span class=EXP>EXP2</span></code>
+					</td>
+					<td><span class=EXP>EXP1</span> is multiplied, divided, or the modulus of <span class=EXP>EXP2</span>.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td><code><span class=EXP>EXP</span><sup>2</sup></code></td>
+					<td>The expression is multiplied by itself.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code><span class=EXP>EXP1</span>=<span class=EXP>EXP2</span></code><br />
+						<code><span class=EXP>EXP1</span>&ne;<span class=EXP>EXP2</span></code><br />
+						<code><span class=EXP>EXP1</span>&lt;<span class=EXP>EXP2</span></code><br />
+						<code><span class=EXP>EXP1</span>&gt;<span class=EXP>EXP2</span></code><br />
+						<code><span class=EXP>EXP1</span>&le;<span class=EXP>EXP2</span></code><br />
+						<code><span class=EXP>EXP1</span>&ge;<span class=EXP>EXP2</span></code>
+					</td>
+					<td>Returns 1 if the statement is true or 0 if its false. This is an unsigned comparison.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code><span class=EXP>EXP1</span> or <span class=EXP>EXP2</span></code><br />
+						<code><span class=EXP>EXP1</span> and <span class=EXP>EXP2</span></code><br />
+						<code><span class=EXP>EXP1</span> xor <span class=EXP>EXP2</span></code>
+					</td>
+					<td>Returns the bitwise operation of the lower 8 bits of the expressions. For boolean logic, see the ? and ?? commands.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>abs(<span class=EXP>EXP</span>)</code></td>
+					<td>Returns the absolute value of the expression.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>&radic;(<span class=EXP>EXP</span>)</code></td>
+					<td>Returns the square root of the expression.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>sin(<span class=EXP>EXP</span>)</code></td>
+					<td>Returns the sine of the expression. One Period is <code>[0,256]</code> and the value returned ranges from <code>-127</code> to <code>127</code>.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>cos(<span class=EXP>EXP</span>)</code></td>
+					<td>Returns the cosine of the expression. One Period is <code>[0,256]</code> and the value returned ranges from <code>-127</code> to <code>127</code>.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>tan<sup>-1</sup>(<span class=DX>DX</span>,<span class=DY>DY</span>)</code></td>
+					<td>Returns the angle of a path that has moved <span class=DX>DX</span> to the right and <span class=DY>DY</span> up. One period is <code>[0,256]</code> and both <span class=DX>DX</span> and <span class=DY>DY</span> must be in the range <code>[-512,512]</code></td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>e^(<span class=EXP>EXP</span>)</code></td>
+					<td>Returns 2 to the power of the expression (modular).</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>ln(<span class=EXP>EXP</span>)</code></td>
+					<td>Returns the log base 2 of the expression, or <code>255</code> if undefined.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>min(<span class=EXP>EXP1</span>,<span class=EXP>EXP2</span>)</code></td>
+					<td>Returns the minimum of the 2 expressions.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>max(<span class=EXP>EXP1</span>,<span class=EXP>EXP2</span>)</code></td>
+					<td>Returns the maximum of the 2 expressions.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>rand</code></td>
+					<td>Returns a random 16 bit number.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td><code><span class=COND>COND</span>?<span class=EXP>EXP</span></code></td>
+					<td>If the condition is true, <span class=EXP>EXP</span> is evaluated. Can be used as an <code>and</code> short circuit operator like <code>&&</code> in C syntax.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code><span class=COND>COND</span>?<span class=EXP>EXP1</span>,<span class=EXP>EXP2</span></code></td>
+					<td>If the condition  is true, <span class=EXP>EXP1</span> is evaluated. Otherwise, <span class=EXP>EXP2</span> is evaluated.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code><span class=COND>COND</span>??<span class=EXP>EXP</span></code></td>
+					<td>If the condition  is false, <span class=EXP>EXP</span> is evaluated. Can be used as an <code>or</code> short circuit operator like <code>||</code> in C syntax.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code><span class=COND>COND</span>??<span class=EXP>EXP1</span>,<span class=EXP>EXP2</span></code></td>
+					<td>If the condition  is false, <span class=EXP>EXP1</span> is evaluated. Otherwise, <span class=EXP>EXP2</span> is evaluated.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<table id=advancedMathCommands class=commandTable>
+			<caption>Advanced Math</caption>
+
+			<thead>
+				<tr>
+					<th>Command</th>
+					<th>Description</th>
+                    <th>Implemented?</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr>
+					<td><code><small>E</small><span class=HEX>HEX</span></code></td>
+					<td>The hexadecimal number as an integer. That prefix is the scientific notation "E".</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>&pi;<span class=BIN>BIN</span></code></td>
+					<td>The binary number as an integer.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code><small><sup>T</sup></small><span class=TOKEN>TOKEN</span></code></td>
+					<td>The 1 or 2 byte token as an integer. That prefix is the transpose symbol <code><sup>T</sup></code>.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code><span class=INT>INT</span>.<span class=DEC>DEC</span></code></td>
+					<td>The non-integer decimal number as an 8.8 fixed point number. Maximum 3 decimal places allowed.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code><span class=EXP>EXP1</span>&lt;&lt;<span class=EXP>EXP2</span></code><br />
+						<code><span class=EXP>EXP1</span>&gt;&gt;<span class=EXP>EXP2</span></code><br />
+						<code><span class=EXP>EXP1</span>&le;&le;<span class=EXP>EXP2</span></code><br />
+						<code><span class=EXP>EXP1</span>&ge;&ge;<span class=EXP>EXP2</span></code>
+					</td>
+					<td>Signed comparisons for numbers that aren't always positive. Returns 1 if the statement is true or 0 if its false.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code><span class=EXP>EXP1</span>**<span class=EXP>EXP2</span></code></td>
+					<td>The signed multiplication is performed using the high byte as the integer part and the low byte as the decimal part returning a number in the same format.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code><span class=EXP>EXP1</span>*^<span class=EXP>EXP2</span></code></td>
+					<td>Computes the high order 16 bits of an unsigned multiplication.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code><span class=EXP>EXP1</span>//<span class=EXP>EXP2</span></code></td>
+					<td>Performs a division, but it works for negative numbers too.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code><span class=EXP>EXP1</span>&middot;<span class=EXP>EXP2</span></code><br />
+						<code><span class=EXP>EXP1</span><small>+</small><span class=EXP>EXP2</span></code><br />
+						<code><span class=EXP>EXP1</span><small>&#9744;</small><span class=EXP>EXP2</span></code>
+					</td>
+					<td>Returns respectively the full 16 bit "and", "or", and "xor" of the two expressions. These are the plot style tokens.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>not(<span class=EXP>EXP</span>)</code></td>
+					<td>Returns the bitwise complement of the 8-bit number.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>not(<span class=EXP>EXP</span>)<sup>r</sup></code></td>
+					<td>Returns the bitwise complement of the 16-bit number.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code><span class=EXP>EXP1</span>e<span class=EXP>EXP2</span></code></td>
+					<td>Gets the <span class=EXP>EXP2</span>-th bit of the 8-bit number in <span class=EXP>EXP1</span>. Unlike assembly, the leftmost bit (high order) is bit 0 and the rightmost bit (low order) is bit 7. The bit checking is modular. That's the Euler's constant <code>e</code>.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code><span class=EXP>EXP1</span>ee<span class=EXP>EXP2</span></code></td>
+					<td>Gets the <span class=EXP>EXP2</span>-th bit of the 16-bit number in <span class=EXP>EXP1</span>. Unlike assembly, the leftmost bit (high order) is bit 0 and the rightmost bit (low order) is bit 15. The bit checking is modular. That's the Euler's constant <code>e</code>.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>&radic;(<span class=EXP>EXP</span>)<sup>r</sup></code></td>
+					<td>Returns the square root of the 8.8 expression in 8.8 format.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code><span class=EXP>EXP</span><sup>-1</sup></code></td>
+					<td>Finds the reciprocal of the 8.8 fixed point number.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<table id=drawingCommands class=commandTable>
+			<caption>Drawing</caption>
+
+			<thead>
+				<tr>
+					<th>Command</th>
+					<th>Description</th>
+                    <th>Implemented?</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr>
+					<td>
+						<code>Pxl-On(<span class=X>X</span>,<span class=Y>Y</span>)</code><br />
+						<code>Pxl-On(<span class=X>X</span>,<span class=Y>Y</span>)<sup>r</sup></code><br />
+						<code>Pxl-On(<span class=X>X</span>,<span class=Y>Y</span>,<span class=BUF>BUF</span>)</code>
+					</td>
+					<td>The pixel at (<span class=X>X</span>,<span class=Y>Y</span>) becomes black on the main buffer, back buffer, or specified buffer respectively.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>Pxl-Off(<span class=X>X</span>,<span class=Y>Y</span>)</code><br />
+						<code>Pxl-Off(<span class=X>X</span>,<span class=Y>Y</span>)<sup>r</sup></code><br />
+						<code>Pxl-Off(<span class=X>X</span>,<span class=Y>Y</span>,<span class=BUF>BUF</span>)</code>
+					</td>
+					<td>The pixel at (<span class=X>X</span>,<span class=Y>Y</span>) becomes white on the main buffer, back buffer, or specified buffer respectively.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>Pxl-Change(<span class=X>X</span>,<span class=Y>Y</span>)</code><br />
+						<code>Pxl-Change(<span class=X>X</span>,<span class=Y>Y</span>)<sup>r</sup></code><br />
+						<code>Pxl-Change(<span class=X>X</span>,<span class=Y>Y</span>,<span class=BUF>BUF</span>)</code>
+					</td>
+					<td>The pixel at (<span class=X>X</span>,<span class=Y>Y</span>) inverts color on the main buffer, back buffer, or specified buffer respectively.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>pxl-Test(<span class=X>X</span>,<span class=Y>Y</span>)</code><br />
+						<code>pxl-Test(<span class=X>X</span>,<span class=Y>Y</span>)<sup>r</sup></code><br />
+						<code>pxl-Test(<span class=X>X</span>,<span class=Y>Y</span>,<span class=BUF>BUF</span>)</code>
+					</td>
+					<td>Returns 1 if pixel is black and 0 if pixel is white at (<span class=X>X</span>,<span class=Y>Y</span>) on the main buffer, back buffer, or specified buffer respectively.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>Line(<span class=X>X1</span>,<span class=Y>Y1</span>,<span class=X>X2</span>,<span class=Y>Y2</span>)</code><br />
+						<code>Line(<span class=X>X1</span>,<span class=Y>Y1</span>,<span class=X>X2</span>,<span class=Y>Y2</span>)<sup>r</sup></code><br />
+						<code>Line(<span class=X>X1</span>,<span class=Y>Y1</span>,<span class=X>X2</span>,<span class=Y>Y2</span>,<span class=BUF>BUF</span>)</code>
+					</td>
+					<td>Draws a black line from point (<span class=X>X1</span>,<span class=Y>Y1</span>) to (<span class=X>X2</span>,<span class=Y>Y2</span>) on the main buffer, back buffer, or specified buffer respectively.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>Rect(<span class=X>X</span>,<span class=Y>Y</span>,<span class=W>W</span>,<span class=H>H</span>)</code><br />
+						<code>Rect(<span class=X>X</span>,<span class=Y>Y</span>,<span class=W>W</span>,<span class=H>H</span>)<sup>r</sup></code><br />
+						<code>Rect(<span class=X>X</span>,<span class=Y>Y</span>,<span class=W>W</span>,<span class=H>H</span>,<span class=BUF>BUF</span>)</code>
+						<span class=keyReplacement>ref()</span>
+					</td>
+					<td>Draws a filled rectangle with its upper left corner at (<span class=X>X</span>,<span class=Y>Y</span>), a width of <span class=W>W</span>, and a height <span class=H>H</span> on the main buffer, back buffer, or specified buffer respectively.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>RectI(<span class=X>X</span>,<span class=Y>Y</span>,<span class=W>W</span>,<span class=H>H</span>)</code><br />
+						<code>RectI(<span class=X>X</span>,<span class=Y>Y</span>,<span class=W>W</span>,<span class=H>H</span>)<sup>r</sup></code><br />
+						<code>RectI(<span class=X>X</span>,<span class=Y>Y</span>,<span class=W>W</span>,<span class=H>H</span>,<span class=BUF>BUF</span>)</code>
+						<span class=keyReplacement>rref()</span>
+					</td>
+					<td>Inverts a filled rectangle with its upper left corner at (<span class=X>X</span>,<span class=Y>Y</span>), a width of <span class=W>W</span>, and a height <span class=H>H</span> on the main buffer, back buffer, or specified buffer respectively.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr class>
+					<td>
+						<code>Circle(<span class=X>X</span>,<span class=Y>Y</span>,<span class=R>R</span>)</code><br />
+						<code>Circle(<span class=X>X</span>,<span class=Y>Y</span>,<span class=R>R</span>)<sup>r</sup></code><br />
+						<code>Circle(<span class=X>X</span>,<span class=Y>Y</span>,<span class=R>R</span>,<span class=BUF>BUF</span>)</code><br />
+					</td>
+					<td>Draws a circle with center (<span class=X>X</span>,<span class=Y>Y</span>) and radius <span class=R>R</span> on the main buffer, back buffer, or specified buffer respectively.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<table id=spritesCommands class=commandTable>
+			<caption>Sprites</caption>
+
+			<thead>
+				<tr>
+					<th>Command</th>
+					<th>Description</th>
+                    <th>Implemented?</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr>
+					<td>
+						<code>Pt-On(<span class=X>X</span>,<span class=Y>Y</span>,<span class=PIC>PIC</span>)</code><br />
+						<code>Pt-On(<span class=X>X</span>,<span class=Y>Y</span>,<span class=PIC>PIC</span>)<sup>r</sup></code><br />
+						<code>Pt-On(<span class=X>X</span>,<span class=Y>Y</span>,<span class=PIC>PIC</span>,<span class=BUF>BUF</span>)</code>
+					</td>
+					<td>The 8x8 sprite pointed to is drawn at (<span class=X>X</span>,<span class=Y>Y</span>) to the main buffer, back buffer, or specified buffer respectively. Does not clear the area behind it.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>Pt-Off(<span class=X>X</span>,<span class=Y>Y</span>,<span class=PIC>PIC</span>)</code><br />
+						<code>Pt-Off(<span class=X>X</span>,<span class=Y>Y</span>,<span class=PIC>PIC</span>)<sup>r</sup></code><br />
+						<code>Pt-Off(<span class=X>X</span>,<span class=Y>Y</span>,<span class=PIC>PIC</span>,<span class=BUF>BUF</span>)</code>
+					</td>
+					<td>The 8x8 sprite pointed to is drawn at (<span class=X>X</span>,<span class=Y>Y</span>) to the main buffer, back buffer, or specified buffer respectively, but clears the area behind it first.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>Pt-Change(<span class=X>X</span>,<span class=Y>Y</span>,<span class=PIC>PIC</span>)</code><br />
+						<code>Pt-Change(<span class=X>X</span>,<span class=Y>Y</span>,<span class=PIC>PIC</span>)<sup>r</sup></code><br />
+						<code>Pt-Change(<span class=X>X</span>,<span class=Y>Y</span>,<span class=PIC>PIC</span>,<span class=BUF>BUF</span>)</code>
+					</td>
+					<td>The 8x8 sprite pointed to inverts its pixels at (<span class=X>X</span>,<span class=Y>Y</span>) to the main buffer, back buffer, or specified buffer respectively. Does not clear the area behind it.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>pt-Get(<span class=X>X</span>,<span class=Y>Y</span>)</code><br />
+						<code>pt-Get(<span class=X>X</span>,<span class=Y>Y</span>)<sup>r</sup></code><br />
+						<code>pt-Get(<span class=X>X</span>,<span class=Y>Y</span>,<span class=BUF>BUF</span>)</code>
+						<span class=keyReplacement>Plot2()</span>
+					</td>
+					<td>Returns a temporary pointer to a copy of the 8x8 sprite at (<span class=X>X</span>,<span class=Y>Y</span>) on the main buffer, back buffer, or specified buffer respectively.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>pt-Get(<span class=X>X</span>,<span class=Y>Y</span>,<span class=BUF>BUF</span>,<span class=TEMP>TEMP</span>)</code>
+						<span class=keyReplacement>Plot2()</span>
+					</td>
+					<td>Copies the 8x8 sprite at (<span class=X>X</span>,<span class=Y>Y</span>) on the specified buffer to 8 bytes starting at <span class=TEMP>TEMP</span>. Returns <span class=TEMP>TEMP</span> for convenience.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>Pt-Mask(<span class=X>X</span>,<span class=Y>Y</span>,<span class=PIC>PIC</span>)</code>
+						<span class=keyReplacement>Plot1()</span>
+					</td>
+					<td>The 8x8 grayscale sprite (2 layers) pointed to is drawn to both buffers at (<span class=X>X</span>,<span class=Y>Y</span>). Areas clear on both layers are transparent and the other combinations are 3-level grayscale.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+				<tr class>
+					<td>
+						<code>Pt-Mask(<span class=X>X</span>,<span class=Y>Y</span>,<span class=PIC>PIC</span>)<sup>r</sup></code><br />
+						<code>Pt-Mask(<span class=X>X</span>,<span class=Y>Y</span>,<span class=PIC>PIC</span>,<span class=BUF>BUF</span>)<sup>r</sup></code>
+						<span class=keyReplacement>Plot1()</span>
+					</td>
+					<td>The 8x8 masked sprite (2 layers) pointed to is drawn to the main buffer or specified buffer at (<span class=X>X</span>,<span class=Y>Y</span>). Areas clear on both layers are transparent and the other combinations are black, white, and invert.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+				<tr>
+					<td>
+						<code>Bitmap(<span class=X>X</span>,<span class=Y>Y</span>,<span class=BMP>BMP</span>)</code><br />
+						<code>Bitmap(<span class=X>X</span>,<span class=Y>Y</span>,<span class=BMP>BMP</span>)<sup>r</sup></code><br />
+						<code>Bitmap(<span class=X>X</span>,<span class=Y>Y</span>,<span class=BMP>BMP</span>,<span class=BUF>BUF</span>)</code><br />
+						<code>Bitmap(<span class=X>X</span>,<span class=Y>Y</span>,<span class=BMP>BMP</span>,<span class=BUF>BUF</span>,<span class=MODE>MODE</span>)</code>
+						<span class=keyReplacement>Tangent()</span>
+					</td>
+					<td>Draws a bitmap to (<span class=X>X</span>,<span class=Y>Y</span>) on the main buffer, back buffer, or specified buffer respectively. The bitmap data should have in order: height (1 byte), then width (1 byte), then the rows of the image padded with zeros to the nearest byte. Mode 0 is "Pt-On" logic and Mode 1 is "Pt-Change" logic. Mode 0 is used if unspecified.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+				<tr>
+					<td>
+						<code>rotC(<span class=PIC>PIC</span>)</code>
+						<span class=keyReplacement>ShadeNorm()</span>
+					</td>
+					<td>A copy of the 8x8 sprite pointed to is rotated clockwise 90 degrees. Returns a pointer to that new rotated sprite. Cannot be used recursively.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+				<tr>
+					<td>
+						<code>rotCC(<span class=PIC>PIC</span>)</code>
+						<span class=keyReplacement>Shade_t()</span>
+					</td>
+					<td>A copy of the 8x8 sprite pointed to is rotated counter-clockwise 90 degrees. Returns a pointer to that new rotated sprite. Cannot be used recursively.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+				<tr>
+					<td>
+						<code>flipV(<span class=PIC>PIC</span>)</code>
+						<span class=keyReplacement>ShadeX2()</span>
+					</td>
+					<td>A copy of the 8x8 sprite pointed to is flipped vertically. Returns a pointer to that new flipped sprite. Cannot be used recursively.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+				<tr>
+					<td>
+						<code>flipH(<span class=PIC>PIC</span>)</code>
+						<span class=keyReplacement>ShadeF()</span>
+					</td>
+					<td>A copy of the 8x8 sprite pointed to is flipped horizontally. Returns a pointer to that new flipped sprite.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<table id=textCommands class=commandTable>
+			<caption>Text</caption>
+
+			<thead>
+				<tr>
+					<th>Command</th>
+					<th>Description</th>
+                    <th>Implemented?</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr>
+					<td><code>Disp <span class=PTR>PTR</span></code></td>
+					<td>The string that is pointed to is displayed at the cursor position. The cursor moves with the string. If it reaches the end of the screen, it will loop around to the next line.</td>
+                    <td>Partially -- prints to the console</td>
+				</tr>
+
+				<tr>
+					<td><code>Disp <span class=EXP>EXP</span>&#9654;Dec</code></td>
+					<td>The number is displayed as a decimal at the cursor position. The cursor is then advanced 5 spaces.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>Disp <span class=EXP>EXP</span>&#9654;Char</code>
+						<span class=keyReplacement>&#9654;Frac</span>
+					</td>
+					<td>The ASCII character is displayed at the cursor position. The cursor is advanced 1 space. A new line is added if it hits the edge.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>Disp <span class=EXP>EXP</span>&#9654;Tok</code>
+						<span class=keyReplacement>&#9654;DMS</span>
+					</td>
+					<td>The 1 or 2 byte token is displayed at the cursor position. The cursor is advanced. A new line is added if it hits the edge.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>Disp <span class=i>i</span></code></td>
+					<td>The cursor moves to the next line down. This is the imaginary, not lowercase 'i'.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>Output(<span class=X>X</span>)</code></td>
+					<td>The cursor moves to the cursor position (<span class=X>X</span>/256,<span class=X>X</span>%256).</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>Output(<span class=X>X</span>,<span class=Y>Y</span>)</code></td>
+					<td>The cursor moves to the cursor position (<span class=X>X</span>,<span class=Y>Y</span>).</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>Output(<span class=X>X</span>,<span class=Y>Y</span>,...</code></td>
+					<td>The cursor moves to the cursor position (<span class=X>X</span>,<span class=Y>Y</span>) and whatever follows is displayed at that position.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>Text <span class=EXP>EXP</span></code></td>
+					<td>The text pointed to is drawn at the current pen location. See <code>Fix</code> command for drawing details.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>Text <span class=EXP>EXP</span>&#9654;Dec</code></td>
+					<td>The number is drawn as a decimal at the current pen location. See <code>Fix</code> command for drawing details.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>Text <span class=EXP>EXP</span>&#9654;Char</code>
+						<span class=keyReplacement>&#9654;Frac</span>
+					</td>
+					<td>The ASCII character is drawn at the current pen location. See <code>Fix</code> command for drawing details.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>Text <span class=PTR>PTR</span>&#9654;Tok</code>
+						<span class=keyReplacement>&#9654;DMS</span>
+					</td>
+					<td>The 1 or 2 byte token POINTED TO is drawn at the current pen location. Notice how this is different than Disp. See <code>Fix</code> command for drawing details.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>Text(<span class=X>X</span>)</code></td>
+					<td>The text pen moves to the position (<span class=X>X</span>%256,<span class=X>X</span>/256).</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>Text(<span class=X>X</span>,<span class=Y>Y</span>)</code></td>
+					<td>The text pen moves to the position (<span class=X>X</span>,<span class=Y>Y</span>).</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>Text(<span class=X>X</span>,<span class=Y>Y</span>,...)</code></td>
+					<td>The text pen moves to the position (<span class=X>X</span>,<span class=Y>Y</span>). Whatever comes next becomes the <code>Text</code> command.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code><span class=EXP>EXP</span>&#9654;Hex</code>
+						<span class=keyReplacement>&#9654;Rect</span>
+					</td>
+					<td>Converts the number to hexadecimal and returns the pointer to that string.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr><td><code>Fix 0</code></td><td>Small size font. Calculator should exit in this mode if changed!</td><td class=notImplemented>No</td></tr>
+				<tr><td><code>Fix 1</code></td><td>Large size font.</td><td class=notImplemented>No</td></tr>
+				<tr><td><code>Fix 2</code></td><td>Normal colored font. Calculator should exit in this mode if changed!</td><td class=notImplemented>No</td></tr>
+				<tr><td><code>Fix 3</code></td><td>Inverted font.</td><td class=notImplemented>No</td></tr>
+				<tr><td><code>Fix 4</code></td><td>Text is drawn directly to the screen. Calculator should exit in this mode if changed!</td><td class=notImplemented>No</td></tr>
+				<tr><td><code>Fix 5</code></td><td>Text is drawn to the buffer.</td><td class=notImplemented>No</td></tr>
+				<tr><td><code>Fix 6</code></td><td>Automatic scrolling on last line of display. Calculator should exit in this mode if changed!</td><td class=notImplemented>No</td></tr>
+				<tr><td><code>Fix 7</code></td><td>No scrolling on last line of display</td><td class=notImplemented>No</td></tr>
+				<tr><td><code>Fix 8</code></td><td>Lowercase alpha is turned off.</td><td class=notImplemented>No</td></tr>
+				<tr><td><code>Fix 9</code></td><td>Lowercase alpha is turned on.</td><td class=notImplemented>No</td></tr>
+			</tbody>
+		</table>
+
+		<table id=dataAndStorageCommands class=commandTable>
+			<caption>Data and Storage</caption>
+
+			<thead>
+				<tr>
+					<th>Command</th>
+					<th>Description</th>
+                    <th>Implemented?</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr>
+					<td><code>"<span class=STR>STRING</span>"</code></td>
+					<td>Adds the string to program memory, but without the ending character.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>[<span class=HEX>HEX</span>]</code></td>
+					<td>Adds the hex to the program memory.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>[<span class=VAR>OSVAR</span>]</code></td>
+					<td>Absorbs the picture, appvar, program, or string from the calculator into the program. Only the source needs the var, not the executable.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>[<span class=VAR>PICVAR</span><sup>r</sup>]</code></td>
+					<td>Absorbs the tile map picture from the calculator into the program. 12 tiles across, moving down. Only the source needs the pic, not the executable.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>Data(<span class=CONST>CONST</span>,...)</code>
+						<span class=keyReplacement>&Delta;List()</span>
+					</td>
+					<td>Adds the bytes to program memory. Numbers ending with <sup>r</sup> are added as 2 byte numbers.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>Buff(<span class=SIZE>SIZE</span>)</code><br />
+						<code>Buff(<span class=SIZE>SIZE</span>,<span class=CONST>CONST</span>)</code>
+						<span class=keyReplacement>det()</span>
+					</td>
+					<td>Creates a buffer that is size bytes large, filled with the byte constant, or with zero if unspecified.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code><span class=DATA>DATA</span>&rarr;<span class=NAME>NAME</span></code></td>
+					<td>Saves the data's pointer to the static variable. Also terminates current string if applicable.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code><span class=CONST>CONST</span>&rarr;<span class=NAME>NAME</span></code></td>
+					<td>Saves the constant's value to the static variable.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr class>
+					<td><code><span class=CONST>CONST</span>&rarr;&rarr;<span class=NAME>NAME</span></code></td>
+					<td>Saves the constant's value to the static variable only if it hasn't already been defined.  Ignored otherwise.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code><span class=NAME>NAME</span></code></td>
+					<td>Returns a pointer to the start of the data.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><i>See below</i></td>
+					<td>The list tokens point to "safe" areas of memory you are free to use.</td>
+                    <td class=implemented>Yes -- all implemented.</td>
+				</tr>
+
+				<tr>
+					<td><code><span class=VAR>L<sub>1</sub></span></code></td>
+					<td>714 bytes (<code>saveSScreen</code>) Volatility: <span class=LOW>LOW</span> (Can be increased to 768 bytes by using <code>#Realloc</code>)</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td><code><span class=VAR>L<sub>2</sub></span></code></td>
+					<td>531 bytes (<code>statVars</code>) Volatility: <span class=LOW>LOW</span> (Do not use this area when custom interrupts are enabled, including Mirage OS)</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td><code><span class=VAR>L<sub>3</sub></span></code></td>
+					<td>768 bytes (<code>appBackUpScreen</code>) Volatility: <span class=MED>MED</span> (Saving to back-buffer will corrupt)</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td><code><span class=VAR>L<sub>4</sub></span></code></td>
+					<td>256 bytes (<code>tempSwapArea</code>) Volatility: <span class=MED>MED</span> (Corrupt after archiving/unarchiving anything)</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td><code><span class=VAR>L<sub>5</sub></span></code></td>
+					<td>128 bytes (<code>textShadow</code>) Volatility: <span class=MED>MED</span> ("Disp","Output", and "ClrHome" will corrupt)</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td><code><span class=VAR>L<sub>6</sub></span></code></td>
+					<td>768 bytes (<code>plotSScreen</code>) Volatility: <span class=HIGH>HIGH</span> (Any buffer drawing will corrupt)</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td><code>{<span class=EXP>EXP</span>}</code></td>
+					<td>Returns the single byte the expression points to. It will be in the range 0 to 255.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td><code>{<span class=EXP>EXP</span>}<sup>r</sup></code></td>
+					<td>Returns the 2 byte data the expression points to.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td><code>{<span class=EXP>EXP</span>}<sup>rr</sup></code></td>
+					<td>Returns the 2 byte data the expression points to but in reverse order.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code><span class=EXP>EXP1</span>&rarr;{<span class=EXP>EXP2</span>}</code></td>
+					<td>The single byte of <span class=EXP>EXP1</span> is stored to where <span class=EXP>EXP2</span> points.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td><code><span class=EXP>EXP1</span>&rarr;{<span class=EXP>EXP2</span>}<sup>r</sup></code></td>
+					<td>The full 2 bytes of <span class=EXP>EXP1</span> are stored to where <span class=EXP>EXP2</span> points.</td>
+                    <td class=implemented>Yes</td>
+				</tr>
+
+				<tr>
+					<td><code><span class=EXP>EXP1</span>&rarr;{<span class=EXP>EXP2</span>}<sup>rr</sup></code></td>
+					<td>The full 2 bytes of <span class=EXP>EXP1</span> are stored to where <span class=EXP>EXP2</span> points but in reverse order.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>sign{<span class=EXP>EXP</span>}</code>
+						<span class=keyReplacement>int()</span>
+					</td>
+					<td>Returns the single byte the expression points to. It will be in the range -128 to 127.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>nib{<span class=PTR>PTR</span>}</code>
+						<span class=keyReplacement>iPart()</span>
+					</td>
+					<td>Returns the Nth nibble in RAM. Since there are twice as many nibbles as bytes, make sure pointers are multiplied by 2.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>nib{<span class=PTR>PTR</span>}<sup>r</sup></code>
+						<span class=keyReplacement>iPart()</span>
+					</td>
+					<td>Returns the Nth nibble in an Application. Since there are twice as many nibbles as bytes, make sure pointers are multiplied by 2.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code><span class=EXP>EXP</span>&rarr;nib{<span class=PTR>PTR</span>}</code>
+						<span class=keyReplacement>iPart()</span>
+					</td>
+					<td>Writes to the Nth nibble in RAM. Since there are twice as many nibbles as bytes, make sure pointers are multiplied by 2.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>Fill(<span class=PTR>PTR</span>,<span class=SIZE>SIZE</span>)</code></td>
+					<td>The byte already at <span class=PTR>PTR</span> is copied to all the bytes after it until <span class=SIZE>SIZE</span> bytes have been filled with that value. Zero is not a valid Size.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>Fill(<span class=PTR>PTR</span>,<span class=SIZE>SIZE</span>,<span class=BYTE>BYTE</span>)</code></td>
+					<td><span class=SIZE>SIZE</span> bytes of data starting at <span class=PTR>PTR</span> are filled with a value. <span class=SIZE>SIZE</span> must be greater than 1.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr class>
+					<td>
+						<code>Copy(<span class=BUF>BUF</span>)</code>
+						<span class=keyReplacement>conj()</span>
+					</td>
+					<td>Copies the 768 byte buffer to the main buffer. Same as <code>Copy(<span class=PTR>BUF</span>,<span class=VAR>L<sub>6</sub></span>,768)</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr class>
+					<td>
+						<code>Copy(<span class=BUF>BUF1</span>,<span class=BUF>BUF2</span>)</code>
+						<span class=keyReplacement>conj()</span>
+					</td>
+					<td>Copies the 768 byte buffer <span class=BUF>BUF1</span> to <span class=BUF>BUF2</span>. Same as <code>Copy(<span class=BUF>BUF1</span>,<span class=BUF>BUF2</span>,768)</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>Copy(<span class=PTR>PTR1</span>,<span class=PTR>PTR2</span>,<span class=SIZE>SIZE</span>)</code>
+						<span class=keyReplacement>conj()</span>
+					</td>
+					<td><span class=SIZE>SIZE</span> bytes starting from <span class=PTR>PTR1</span> are copied to <span class=PTR>PTR2</span> onwards. Zero is not a valid Size.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>Copy(<span class=PTR>PTR1</span>,<span class=PTR>PTR2</span>,<span class=SIZE>SIZE</span>)<sup>r</sup></code>
+						<span class=keyReplacement>conj()</span>
+					</td>
+					<td><span class=SIZE>SIZE</span> bytes ending at <span class=PTR>PTR1</span> are copied to <span class=PTR>PTR2</span> moving backwards. Zero is not a valid Size.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>Exch(<span class=PTR>PTR1</span>,<span class=PTR>PTR2</span>,<span class=SIZE>SIZE</span>)</code>
+						<span class=keyReplacement>expr()</span>
+					</td>
+					<td><span class=SIZE>SIZE</span> bytes starting from <span class=PTR>PTR1</span> are exchanged with <span class=SIZE>SIZE</span> bytes starting at <span class=PTR>PTR2</span>. Zero is not a valid Size.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+			</tbody>
+		</table>
+
+		<table id=externalVariablesCommands class=commandTable>
+			<caption>External Variables</caption>
+
+			<thead>
+				<tr>
+					<th>Command</th>
+					<th>Description</th>
+                    <th>Implementation</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr>
+					<td><code>Ans</code></td>
+					<td>Returns the OS's <code>Ans</code> variable as an integer. This is unrelated to any Axe value. Throws an error if out of range.</td>
+                    <td class=notImplemented>No, and possibly never.</td>
+				</tr>
+
+				<tr>
+					<td><code><span class=EXP>EXP</span>&rarr;Ans</code></td>
+					<td>Stores the expression into the OS's <code>Ans</code> variable as an integer. This is unrelated to any Axe value.</td>
+                    <td class=notImplemented>No, and possibly never.</td>
+				</tr>
+
+				<tr>
+					<td><code>GetCalc(<span class=PTR>PTR</span>)</code></td>
+					<td>Finds the object who's name is pointed to and returns a pointer to the start of its data, or zero if it was archived or not found.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>GetCalc(<span class=PTR>PTR</span>,<span class=FILE>FILE</span>)</code></td>
+					<td>Attempts to create a file of the OS variable who's name is pointed to so it can be read from archive. Returns 0 if the variable was not found, and non-zero otherwise.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>GetCalc(<span class=PTR>PTR</span>,<span class=SIZE>SIZE</span>)</code></td>
+					<td>Creates an OS variable who's name is pointed to in RAM and makes it <span class=SIZE>SIZE</span> bytes large. Returns a pointer to the start of data, or zero if there was not enough RAM. Overwrites existing variable, even if it was in archive.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>UnArchive <span class=PTR>PTR</span></code></td>
+					<td>Tries to unarchive the object who's name is pointed to. Returns 1 if it could unarchive and 0 otherwise. Gives a memory error if not enough RAM.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>Archive <span class=PTR>PTR</span></code></td>
+					<td>Tries to archive the object who's name is pointed to. Returns 1 if it could archive and 0 otherwise. Gives a memory error if not enough Flash Memory.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>DelVar <span class=PTR>PTR</span></code></td>
+					<td>Deletes the OS variable who's name is pointed to even if in archive. Nothing happens if the variable does not exist.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>input</code></td>
+					<td>Prompts for an input string just like BASIC then returns a pointer to the string structure. Don't forget, its a string of tokens, not characters.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>float{<span class=PTR>PTR</span>}</code>
+						<span class=keyReplacement>fPart()</span>
+					</td>
+					<td>Converts the float at the pointed address to an integer. Floats are 9 bytes large.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code><span class=EXP>EXP</span>&rarr;float{<span class=PTR>PTR</span>}</code>
+						<span class=keyReplacement>fPart()</span>
+					</td>
+					<td>Converts the expression into a float and then stores it at the pointed address. Floats are 9 bytes large.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<table id=interruptsCommands class=commandTable>
+			<caption>Interrupts</caption>
+
+			<thead>
+				<tr>
+					<th>Command</th>
+					<th>Description</th>
+                    <th>Implementation</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr>
+					<td><code>FnInt(<span class=LBL>LBL</span>,<span class=FREQ>FREQ</span>)</code></td>
+					<td>Turns the subroutine into an interrupt and then turns interrupts on. The frequency can be (fastest) 0, 2, 4, or 6 (slowest). <span class=VAR>L<sub>2</sub></span> is used for interrupt data so do not use <span class=VAR>L<sub>2</sub></span> for storage when using interrupts.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>FnOn</code></td>
+					<td>Turns on interrupts.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>FnOff</code></td>
+					<td>Turns off interrupts.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>Stop</code></td>
+					<td>Stops execution until the next interrupt occurs. Interrupts must be on or else the calculator will freeze.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>LnReg</code></td>
+					<td>Returns the calculator to regular interrupt mode. MUST be called before exiting the program if using interrupts.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<table id=linkPortCommands class=commandTable>
+			<caption>Link Port</caption>
+
+			<thead>
+				<tr>
+					<th>Command</th>
+					<th>Description</th>
+                    <th>Implemented?</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr>
+					<td>
+						<code>Port</code>
+						<span class=keyReplacement>ClrTable</span>
+					</td>
+					<td>Returns the status of the link port as a number 0-3.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code><span class=EXP>EXP</span>&rarr;Port</code>
+						<span class=keyReplacement>ClrTable</span>
+					</td>
+					<td>Sets the link port to a given status with a number 0-3. Must exit program with status 0 if changed!</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>Freq(<span class=WAVE>WAVE</span>,<span class=TIME>TIME</span>)</code>
+						<span class=keyReplacement>SinReg</span>
+					</td>
+					<td>Sound is played out of the link port. Wave is inversely proportional to frequency and Time must be much greater than Wave to hear anything.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>Send(<span class=BYTE>BYTE</span>,<span class=TIME>TIME</span>)</code></td>
+					<td>Tries to send the byte across the linkport. It will keep trying until the other calculator receives the byte or time runs out. Returns 1 if the byte was sent successfully or 0 if it timed-out. Time is in the order of microseconds.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>Get</code></td>
+					<td>Checks if the sender is trying to send anything. Returns the byte if it was received or -1 if nothing was sent. No waiting is done.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<table id=miscellaneousCommands class=commandTable>
+			<caption>Miscellaneous</caption>
+
+			<thead>
+				<tr>
+					<th>Command</th>
+					<th>Description</th>
+                    <th>Implemented?</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr>
+					<td><code>Select(<span class=EXP>EXP1</span>,<span class=EXP>EXP2</span>)</code></td>
+					<td>Returns the original value of <span class=EXP>EXP1</span>, even if variables are modified in <span class=EXP>EXP2</span></td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>length(<span class=PTR>PTR</span>)</code></td>
+					<td>Returns the number of bytes from the pointer to the next zero data element.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td>
+						<code>inData(<span class=BYTE>BYTE</span>,<span class=PTR>PTR</span>)</code>
+						<span class=keyReplacement>inString()</span>
+					</td>
+					<td>Searches for <span class=BYTE>BYTE</span> in the zero-terminated data. If found, it returns the position it was found in (starting at 1). If not found, 0 is returned.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>stdDev(<span class=PTR>PTR</span>,<span class=N>N</span>)</code></td>
+					<td>Returns the pointer to the <span class=N>N</span>th string (starting from zero) from a list of zero-terminated strings.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>Equ&#9654;String(<span class=STR1>STR1</span>,<span class=STR2>STR2</span>)</code></td>
+					<td>Checks if 2 null-terminated strings are equal. Returns 0 if equal and non-zero otherwise.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>SortD(<span class=PTR>PTR</span>,<span class=SIZE>SIZE</span>)</code></td>
+					<td>Sorts up to 256 bytes of data from largest to smallest starting at the pointed address.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+
+				<tr>
+					<td><code>cumSum(<span class=PTR>PTR</span>,<span class=SIZE>SIZE</span>)</code></td>
+					<td>Calculates the checksum of some data starting at the pointer for <span class=SIZE>SIZE</span> bytes.</td>
+                    <td class=notImplemented>No</td>
+				</tr>
+			</tbody>
+		</table>
+		<table class=implementationKey>
+			<tr><td class="implemented">Features implemented</td></tr>
+            <tr><td class="noOp">Any of these commands marked in gray will be ignored -- you can use them in your code, but they won't do anything.</td></tr>
+			<tr><td class="notImplemented">Features not yet implemented</td></tr>
+		</table>
+		<footer><h5>Axe Parser Commands List - Copyright &copy; 2012 Kevin Horowitz.  Layout designed by Etienne Gauvin.  Modified by Michael Lee.</h5></footer>
+	</body>
+</html>

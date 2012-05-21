@@ -1,0 +1,85 @@
+.DODGE
+
+
+Repeat getKey(15):
+    30->X
+    55->Y
+    3->K
+
+    0 -> N
+    30 -> M
+
+    0->B
+    ClrDraw
+    Repeat getKey(15) + B
+        ClrDraw^^r
+        Rect(0,60, 96, 4)
+        
+        getKey(3) - getKey(2) * K + X -> X
+        X < 3 - (X > 87) * K + X -> X
+        
+        getKey(1) - getKey(4) * K + Y -> Y
+        Y < 3 - (Y > 59) * K + Y -> Y
+        
+        If (rand ^ 3 = 0) * (N < M)
+            0->P
+            For(I, 0, M)
+                If {I * 4 + L1} = 0
+                    I -> P
+                End
+            End
+            P * 4 + L1 -> D
+            rand^85 + 5 -> {D}
+            rand^4 + 1->{D + 2}
+            {D + 2} + 1 -> {D + 1}
+            rand^3 + 1 -> {D + 3}
+            N+1->N
+        End
+        
+        For(I, 0, M)
+            I * 4 + L1 -> D
+            If {D}
+                {D + 1} + {D + 3} -> {D + 1}
+                Circle({D}, {D + 1}, {D + 2})^^r
+                If {D+1} > 60
+                    0->{D}
+                    N-1->N
+                End
+            End
+        End
+        
+        For(I, 0, 2)
+            For(J, 0, 2)
+                If Pxl-Test(X + I, Y + J)^^r
+                    1->B
+                    For(I, 0, rand^20+5):
+                        Line(X + 1, Y + 1, rand^95, rand^63)
+                    End
+                    3->J
+                    3->I
+                End
+            End
+        End
+        
+        Rect(X, Y, 3, 3)^^r
+        
+        DispGraph^^r
+    End
+    
+    Pause(2700)
+    For(I,0,59)
+        RectI(0,I,96,1)
+        DispGraph
+        Pause(400)
+    End
+    Repeat getKey(0)
+        DispGraph
+    End
+    For(I,0,M)
+        I * 4 + L1 -> D
+        0->{D}
+    End
+End
+
+ClrDraw
+DispGraph
