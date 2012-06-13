@@ -92,18 +92,36 @@ class CommandIo():
         strings.  The two are equivalent:
         
     
-            $ python console.py --test interpreter ~/programs/test.txt
+            $ python axe-interpreter --test interpreter ~/programs/test.txt
         
         ...and...
     
             >>> import console
-            >>> console.main(['--test', 'interpreter', r'~/program/test.txt'])
+            >>> c = console.CommandIo()
+            >>> c.parse(['--test', 'interpreter', r'~/program/test.txt'])
         """
         if arguments == None:
             options = self._parser.parse_args()
         else:
             options = self._parser.parse_args(arguments)
         return options
+    
+    def call_help(self):
+        """
+        Prompts the console to display the help message.
+        
+        Equivalent to
+        
+            $ python console.py --help
+        
+        ...and...
+        
+            >>> import console
+            >>> c = console.CommandIo()
+            >>> c.parse(['--help'])
+        """
+        self.parse(['--help'])
+        return
 
 
 

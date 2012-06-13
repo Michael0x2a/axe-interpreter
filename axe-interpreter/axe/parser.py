@@ -690,6 +690,56 @@ def p_line_clrdraw_backbuffer(p):
     p[0] = Line(Buffer(p[1], buf))
     return
 
+@debug
+def p_line_clrdraw_both(p):
+    '''line : CLRDRAW RMODIFIER RMODIFIER newline'''
+    buf1 = Pointer(0, 2, 'L6')
+    buf2 = Pointer(0, 2, 'L3')
+    clr1 = Line(Buffer(p[1], buf1))
+    clr2 = Line(Buffer(p[1], buf2))
+    block = Node('block', clr1)
+    block.add_children(clr2)
+    p[0] = block
+    return
+    
+@debug
+def p_line_drawinv_buffer(p):
+    '''line : DRAWINV newline'''
+    buf = Pointer(0, 2, 'L6')
+    p[0] = Line(Drawing(
+        'RECTI', 
+        buf, 
+        Expression(0), 
+        Expression(0), 
+        width=Expression(96), 
+        height=Expression(64)))
+    return
+    
+@debug
+def p_line_drawinv_backbuffer(p):
+    '''line : DRAWINV RMODIFIER newline'''
+    buf = Pointer(0, 2, 'L3')
+    p[0] = Line(Drawing(
+        'RECTI',
+        buf, 
+        Expression(0), 
+        Expression(0), 
+        width=Expression(96), 
+        height=Expression(64)))
+    return
+
+@debug
+def p_line_drawinv_custom(p):
+    '''line : DRAWINV LPAREN expression RPAREN newline'''
+    buf = Pointer(p[3], 2, 'START')
+    p[0] = Line(Drawing(
+        'RECTI',
+        buf, 
+        Expression(0), 
+        Expression(0), 
+        width=Expression(96), 
+        height=Expression(64)))
+    return
 
 ## Expressions ##
 @debug

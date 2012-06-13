@@ -46,7 +46,8 @@ reserved = {
     'Horizontal' : 'HORIZONTAL',
     'Vertical' : 'VERTICAL',
     'DiagnosticOn' : 'DIAGNOSTICON',
-    'DiagnosticOff' : 'DIAGNOSTICOFF'
+    'DiagnosticOff' : 'DIAGNOSTICOFF',
+    'DrawInv' : 'DRAWINV'
 }
 
 # Tokens:

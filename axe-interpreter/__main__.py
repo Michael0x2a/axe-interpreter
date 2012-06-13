@@ -41,8 +41,13 @@ def main(args=None):
         options = console_parser.parse()
         
     if options.input_path:
-        with open(options.input_path, 'r') as input_file:
-            text = input_file.read()
+        try:
+            with open(options.input_path, 'r') as input_file:
+                text = input_file.read()
+        except IOError:
+            error = "\nERROR: Could not open or find `{0}`.  Starting interpreter mode.\n"
+            print(error.format(options.input_path))
+            text = ''
     else:
         text = ''
     
